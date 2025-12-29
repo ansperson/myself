@@ -8,6 +8,8 @@ import toMime from "./toMime.js";
 class WebKWin {
     constructor(url, args) {
         this.isFocused = false;
+        this.minimized = false;
+        this.taskButton = null;
         let urlData = new URL(url, String(location));
         if (urlData.protocol == "javascript:") {
             console.log("prevented xss!");
@@ -85,6 +87,7 @@ class WebKWin {
                 event.target.style.display = "none";
             }
         });
+        this.actions.children[0].addEventListener("mouseup", () => this.minimize());
         this.actions.children[1].addEventListener("mouseup", () => this.toggleFullscreen())
         this.actions.children[2].addEventListener("mouseup", () => {
             if (!this.api.supported) {
@@ -410,7 +413,54 @@ class WebKWin {
 
     remove() {
         this.removed = true;
+        this.removeTaskButton();
         this.element.outerHTML = "";
+    }
+
+    minimize() {
+        if (this.minimized) {
+            return;
+        }
+        this.minimized = true;
+        this.element.style.display = "none";
+        this.createTaskButton();
+    }
+
+    restore() {
+        if (!this.minimized) {
+            return;
+        }
+        this.minimized = false;
+        this.element.style.display = "block";
+        this.removeTaskButton();
+        this.setHighest();
+        this.focus();
+    }
+
+    createTaskButton() {
+        if (this.taskButton) {
+            return;
+        }
+        let panel = document.querySelector(".panel");
+        if (!panel) {
+            return;
+        }
+        let button = document.createElement("div");
+        button.classList.add("taskButton");
+        let iconPath = this.iconLocation || "/usr/share/icons/breeze-dark/categories/applications-all.svg";
+        button.style.backgroundImage = `url("data:image/svg+xml;base64,${btoa(debug.fileapi.internal.read(iconPath))}")`;
+        button.innerText = this.titleText || this.url;
+        button.title = this.titleText || this.url;
+        button.addEventListener("click", () => this.restore());
+        panel.appendChild(button);
+        this.taskButton = button;
+    }
+
+    removeTaskButton() {
+        if (this.taskButton) {
+            this.taskButton.remove();
+            this.taskButton = null;
+        }
     }
 
     enterFullscreen() {

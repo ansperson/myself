@@ -102,16 +102,20 @@ body {
     width: 30px;
     height: 30px;
     border-radius: 6px;
-    border: 1px solid #d8d2c8;
-    background: #faf7f1;
+    border: 1px solid #c9c3b7;
+    background: #f0ece4;
     background-repeat: no-repeat;
     background-position: center;
     background-size: 18px 18px;
     cursor: pointer;
 }
 
+.iconbtn:hover {
+    background: #e4ddd1;
+}
+
 .iconbtn:disabled {
-    opacity: 0.5;
+    opacity: 0.45;
     cursor: default;
 }
 
@@ -133,6 +137,7 @@ body {
     background-repeat: no-repeat;
     background-position: center;
     background-size: 16px 16px;
+    filter: invert(1) brightness(0.2);
 }
 
 #address {

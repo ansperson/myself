@@ -88,6 +88,30 @@ body::after {
     color: var(--Colors_View_ForegroundNormal)
 }
 
+.taskButton {
+    float: left;
+    height: 32px;
+    line-height: 32px;
+    margin: 6px 6px 6px 0;
+    padding: 0 10px 0 34px;
+    border-radius: 4px;
+    background-color: rgba(var(--Colors_View_BackgroundAlternate_raw), 0.6);
+    background-repeat: no-repeat;
+    background-position: 8px center;
+    background-size: 18px 18px;
+    color: var(--Colors_View_ForegroundNormal);
+    font-size: 0.85em;
+    max-width: 220px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.taskButton:hover {
+    background-color: rgba(var(--Colors_View_BackgroundAlternate_raw), 0.9);
+}
+
 .menu {
     position: fixed;
     min-width: 15vw;

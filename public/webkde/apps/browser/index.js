@@ -13,6 +13,9 @@ const closeBannerButton = document.getElementById("close-banner");
 const refreshButton = document.getElementById("refresh");
 const openButton = document.getElementById("open");
 const openBannerButton = document.getElementById("open-banner");
+const backButton = document.getElementById("back");
+const forwardButton = document.getElementById("forward");
+const lockIcon = document.querySelector(".lock");
 
 let currentFile = null;
 let currentUrl = null;
@@ -34,6 +37,24 @@ function showError(message) {
 function clearError() {
     errorBox.textContent = "";
     errorBox.classList.add("hidden");
+}
+
+async function loadBrowserIcons() {
+    const icons = [
+        { element: backButton, path: "/usr/share/icons/breeze-dark/actions/go-previous.svg" },
+        { element: forwardButton, path: "/usr/share/icons/breeze-dark/actions/go-next.svg" },
+        { element: refreshButton, path: "/usr/share/icons/breeze-dark/actions/view-refresh.svg" },
+        { element: openButton, path: "/usr/share/icons/breeze-dark/actions/document-open.svg" },
+        { element: lockIcon, path: "/usr/share/icons/breeze-dark/actions/lock.svg" },
+        { element: closeBannerButton, path: "/usr/share/icons/breeze-dark/actions/gtk-close.svg" }
+    ];
+    for (const item of icons) {
+        if (!item.element) {
+            continue;
+        }
+        const iconContent = await api.filesystem("read", item.path);
+        item.element.style.backgroundImage = `url("data:image/svg+xml;base64,${btoa(iconContent.data.content)}")`;
+    }
 }
 
 async function loadFile(filePath) {
@@ -94,8 +115,9 @@ api.gotData.then(async () => {
     });
 
     await api.loadIcons();
-    document.getElementById("back").disabled = true;
-    document.getElementById("forward").disabled = true;
+    await loadBrowserIcons();
+    backButton.disabled = true;
+    forwardButton.disabled = true;
 
     refreshButton.addEventListener("click", () => loadFile(currentFile));
     openButton.addEventListener("click", openFile);
