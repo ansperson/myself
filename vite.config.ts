@@ -7,6 +7,7 @@ export default defineConfig({
   server: {
     port: 3000,
   },
-  //MySelf Github Pages
-  base: '/myself/',
+  // Base path: use environment variable or default to '/' for local development
+  // Set VITE_BASE_PATH='/myself/' for GitHub Pages deployment
+  base: (process.env as { VITE_BASE_PATH?: string }).VITE_BASE_PATH || '/',
 });

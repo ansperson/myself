@@ -3,6 +3,7 @@ import aboutMe from '../../aboutme.json'
 import themes from '../../themes.json';
 import { history } from '../stores/history';
 import { theme } from '../stores/theme';
+import { runlevel } from '../stores/runlevel';
 
 const hostname = window.location.hostname;
 //"top [number]" command: This command displays the top "number" most relevant projects based on user input (e.g., "top 3 web development projects").
@@ -38,6 +39,38 @@ export const commands: Record<string, (args: string[]) => Promise<string> | stri
   date: () => new Date().toLocaleString(),
   emacs: () => `why use emacs? try 'vim'`,
   echo: (args: string[]) => args.join(' '),
+  init: (args: string[]) => {
+    const usage = `Usage: init [runlevel].
+    [runlevel]:
+      3: terminal (default)
+      5: GUI (webKDE)
+
+    [Examples]:
+      init 3
+      init 5
+    `;
+
+    if (args.length !== 1) {
+      return usage;
+    }
+
+    const nextLevel = Number.parseInt(args[0], 10);
+    if (Number.isNaN(nextLevel)) {
+      return usage;
+    }
+
+    if (nextLevel === 3) {
+      runlevel.set(3);
+      return 'Switched to runlevel 3 (terminal).';
+    }
+
+    if (nextLevel === 5) {
+      runlevel.set(5);
+      return 'Switched to runlevel 5 (webKDE).';
+    }
+
+    return `Runlevel '${args[0]}' is not supported. Use 3 or 5.`;
+  },
   sudo: (args: string[]) => {
     window.open(packageJson.social.url);
 
