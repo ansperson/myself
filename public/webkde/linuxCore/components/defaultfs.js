@@ -129,7 +129,7 @@ export const defaultfs = async function () {
                                                 permission: [7, 5, 5],
                                                 type: "file"
                                             },
-                                            content: "Credits: \n\nKDE idea & concept: https://kde.org\n\nBreeze dark & light theme\nLicense: LGPL\nSource: https://github.com/KDE/breeze/\n\npath.js browserify port\nLicense: MIT\nSource: https://github.com/browserify/path-browserify/blob/master/LICENSE\n\nbash tokonizer\nLicense: MIT\nSource: https://github.com/substack/node-shell-quote"
+                                            content: "Credits: \n\nTerminal base\nSource: https://github.com/m4tt72/terminal\n\nGUI inspiration (webKDE)\nSource: https://github.com/baroxyton/webKDE\n\nKDE idea & concept: https://kde.org\n\nBreeze dark & light theme\nLicense: LGPL\nSource: https://github.com/KDE/breeze/\n\npath.js browserify port\nLicense: MIT\nSource: https://github.com/browserify/path-browserify/blob/master/LICENSE\n\nbash tokonizer\nLicense: MIT\nSource: https://github.com/substack/node-shell-quote"
                                         }
                                     }
                                 },

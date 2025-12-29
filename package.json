@@ -1,6 +1,6 @@
 {
   "author": {
-    "email": "alan.pereira.brasil@gmail.com",
+    "email": "ans.person@gmail.com",
     "name": "Alan Pereira",
     "url": "https://ansperson.github.io/myself/"
   },
@@ -46,5 +46,5 @@
     "url": "https://www.linkedin.com/in/ansperson/"
   },
   "type": "module",
-  "version": "0.3.4"
+  "version": "0.4.0"
 }
