@@ -53,7 +53,9 @@ async function loadBrowserIcons() {
             continue;
         }
         const iconContent = await api.filesystem("read", item.path);
-        item.element.style.backgroundImage = `url("data:image/svg+xml;base64,${btoa(iconContent.data.content)}")`;
+        const iconUrl = `url("data:image/svg+xml;base64,${btoa(iconContent.data.content)}")`;
+        item.element.style.setProperty("--icon-url", iconUrl);
+        item.element.style.backgroundImage = "none";
     }
 }
 

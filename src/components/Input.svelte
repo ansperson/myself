@@ -39,6 +39,10 @@
         const commandFunction = commands[commandName];
         if (commandFunction) {
           const output = await commandFunction(args);
+          if (commandName === 'init' && args[0] === '5') {
+            command = '';
+            return;
+          }
           if (commandName !== 'clear') {
             $history = [...$history, { command, outputs: [output] }];
           }

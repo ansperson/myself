@@ -4,7 +4,7 @@
   import History from './components/History.svelte';
   import WebKDE from './components/WebKDE.svelte';
   import { theme } from './stores/theme';
-  import { runlevel } from './stores/runlevel';
+  import { booting, runlevel } from './stores/runlevel';
 </script>
 
 <svelte:head>
@@ -24,7 +24,10 @@
     <button
       class="absolute top-4 right-4 z-10 rounded-md bg-black/70 px-3 py-1 text-xs text-white backdrop-blur"
       type="button"
-      on:click={() => runlevel.set(3)}
+      on:click={() => {
+        runlevel.set(3);
+        booting.set(false);
+      }}
     >
       Return to terminal
     </button>
@@ -37,10 +40,12 @@
   >
     <History />
 
+  {#if !$booting}
     <div class="flex flex-col md:flex-row">
       <Ps1 />
 
       <Input />
     </div>
+  {/if}
   </main>
 {/if}

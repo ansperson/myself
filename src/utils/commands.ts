@@ -3,7 +3,7 @@ import aboutMe from '../../aboutme.json'
 import themes from '../../themes.json';
 import { history } from '../stores/history';
 import { theme } from '../stores/theme';
-import { runlevel } from '../stores/runlevel';
+import { booting, runlevel } from '../stores/runlevel';
 
 const hostname = window.location.hostname;
 //"top [number]" command: This command displays the top "number" most relevant projects based on user input (e.g., "top 3 web development projects").
@@ -60,13 +60,52 @@ export const commands: Record<string, (args: string[]) => Promise<string> | stri
     }
 
     if (nextLevel === 3) {
+      booting.set(false);
       runlevel.set(3);
       return 'Switched to runlevel 3 (terminal).';
     }
 
     if (nextLevel === 5) {
-      runlevel.set(5);
-      return 'Switched to runlevel 5 (webKDE).';
+      booting.set(true);
+      const bootMessages = [
+        'Starting systemd user sessions...',
+        '[ OK ] Reached target Basic System.',
+        '[ OK ] Started udev Kernel Device Manager.',
+        '[ OK ] Mounted /home/demo.',
+        '[ OK ] Started Network Manager.',
+        '[ OK ] Started Login Service.',
+        '[ OK ] Reached target Multi-User System.',
+        '[ OK ] Started Display Manager.',
+        '[ OK ] Reached target Graphical Interface.',
+        'Starting webKDE (graphical mode)...',
+        'Switching to runlevel 5 (webKDE)...'
+      ];
+      let entryIndex = -1;
+      history.update((items) => {
+        entryIndex = items.length;
+        return [...items, { command: 'init 5', outputs: [] }];
+      });
+      bootMessages.forEach((line, index) => {
+        setTimeout(() => {
+          history.update((items) => {
+            const entry = items[entryIndex];
+            if (!entry) {
+              return items;
+            }
+            const outputs = [...entry.outputs, line];
+            const nextItems = [...items];
+            nextItems[entryIndex] = { ...entry, outputs };
+            return nextItems;
+          });
+          if (index === bootMessages.length - 1) {
+            setTimeout(() => {
+              runlevel.set(5);
+              booting.set(false);
+            }, 500);
+          }
+        }, 500 * index);
+      });
+      return '';
     }
 
     return `Runlevel '${args[0]}' is not supported. Use 3 or 5.`;
