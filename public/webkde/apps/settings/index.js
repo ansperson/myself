@@ -49,8 +49,8 @@ class AboutPage extends SettingPage{
         this.htmlcontent = `
         <div style="text-align:left">
         <h2>About this OS</h2>
-        <b>Inspired By:</b> KDE<br>
-        <b>Github repo:</b> <a target="_blank" href='https://github.com/baroxyton/webKDE'>https://github.com/baroxyton/webKDE</a><br>
+        <b>Inspired By:</b> baroxyton/webKD<br>
+        <b>Github repo:</b> <a target="_blank" href='https://github.com/ansperson/myself'>https://github.com/ansperson/myself</a><br>
         <b>Theme:</b> Breeze<br>
         <b>Version:</b> 1.0
         </div>

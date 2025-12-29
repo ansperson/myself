@@ -22,6 +22,12 @@ jobs:
         env:
           VITE_BASE_PATH: '/myself/'
         run: yarn run build
+      - name: Verify build output
+        run: |
+          echo "Build output structure:"
+          ls -la dist/
+          echo "Checking for index.html:"
+          test -f dist/index.html && echo "✓ index.html exists" || echo "✗ index.html missing"
       - name: Fix permissions
         run: |
           chmod -c -R +rX "dist/" | while read line; do
