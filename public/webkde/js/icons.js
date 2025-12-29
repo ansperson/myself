@@ -4,8 +4,9 @@ import WebKWin from "./windowmanager.js";
 
 // Desktop icon
 class DesktopApp {
-    constructor(name, icon, position, appConfig) {
-        this.name = name;
+    constructor(fileName, icon, position, appConfig, displayName) {
+        this.fileName = fileName;
+        this.displayName = displayName || fileName;
         this.icon = icon;
         this.position = position;
         this.config = appConfig;
@@ -47,7 +48,7 @@ class DesktopApp {
         this.appElement.style.left = /*screen start margin*/ 5 + (iconWidth * /*grid position times icon size*/ this.position.x) + (/*margin and padding of each icon*/40 * this.position.x) + "px";
         this.appElement.style.top = /*screen start margin*/ 5 + (iconHeight * /*grid position times icon size*/ this.position.y) + (/*margin and padding of each icon*/ 40 * this.position.y) + "px";
 
-        this.nameElement.innerText = this.name;
+        this.nameElement.innerText = this.displayName;
 
         // Load icon config
         this.nameElement.style.fontSize = this.config.fontSize;
@@ -77,7 +78,7 @@ class DesktopApp {
                 text: "Open",
                 icon: "/usr/share/icons/breeze-dark/actions/quickopen-file.svg",
                 action: () => {
-                    desktop.openFile("/home/demo/Desktop/" + this.name)
+                    desktop.openFile("/home/demo/Desktop/" + this.fileName)
                 }
             },
             {
@@ -85,7 +86,7 @@ class DesktopApp {
                 icon: "/usr/share/icons/breeze-dark/categories/applications-other.svg",
                 seperator: true,
                 action: () => {
-                    new desktop.window("file:///usr/share/apps/appSelect/index.html", { file: "/home/demo/Desktop/" + this.name });
+                    new desktop.window("file:///usr/share/apps/appSelect/index.html", { file: "/home/demo/Desktop/" + this.fileName });
                 }
             },
             {
@@ -96,15 +97,16 @@ class DesktopApp {
                         type: "prompt",
                         subject: "new file name",
                         buttons: ["Rename"],
-                        inputText: this.name
+                        inputText: this.fileName
                     });
                     namePrompt.api.channel.onevent = data => {
                         if (data.event != "quit") {
                             return;
                         }
                         let newName = data.read();
-                        debug.fileapi.internal.move("/home/demo/Desktop/" + this.name, "/home/demo/Desktop/" + newName);
-                        this.name = newName;
+                        debug.fileapi.internal.move("/home/demo/Desktop/" + this.fileName, "/home/demo/Desktop/" + newName);
+                        this.fileName = newName;
+                        this.displayName = newName;
                         this.render();
                     }
                 }
@@ -115,7 +117,7 @@ class DesktopApp {
                 action: () => {
                     let confirm = new WebKWin("file:///usr/share/apps/dialog/index.html", {
                         type: "confirm",
-                        subject: "permanently delete " + this.name,
+                        subject: "permanently delete " + this.displayName,
                         buttons: ["Don't delete", "<a style='color:red'>Delete</a>"]
                     });
                     confirm.api.channel.onevent = data => {
@@ -123,7 +125,7 @@ class DesktopApp {
                             return;
                         }
                         if (data.read() == "1") {
-                            debug.fileapi.internal.delete("/home/demo/Desktop/" + this.name);
+                            debug.fileapi.internal.delete("/home/demo/Desktop/" + this.fileName);
                             this.remove();
                         }
                     }
@@ -133,7 +135,7 @@ class DesktopApp {
                 icon: "/usr/share/icons/breeze-dark/actions/document-properties.svg",
                 action: () => {
                     new WebKWin("file:///usr/share/apps/properties/index.html", {
-                        path: "/home/demo/Desktop/" + this.name
+                        path: "/home/demo/Desktop/" + this.fileName
                     })
                 }
             }]);
@@ -192,7 +194,7 @@ class DesktopApp {
             this.appElement.style.top = (event.pageY - this.mousedownPosition.y) + "px";
         });
         this.appElement.addEventListener("dblclick", () => {
-            desktop.openFile("/home/demo/Desktop/" + this.name)
+            desktop.openFile("/home/demo/Desktop/" + this.fileName)
         });
     }
 
@@ -205,7 +207,7 @@ class DesktopApp {
         this.position.x = Math.round((this.movePosition.x + 5 - this.mousedownPosition.x) / (40 + iconWidth));
         this.position.y = Math.round((this.movePosition.y + 5 - this.mousedownPosition.y) / (40 + iconHeight));
 
-        desktop.config.desktop.icons[this.name] = { position: { x: this.position.x, y: this.position.y } };
+        desktop.config.desktop.icons[this.fileName] = { position: { x: this.position.x, y: this.position.y } };
         debug.fileapi.internal.write("demo", "/home/demo/.config/plasma.json", JSON.stringify(desktop.config));
         this.render();
     }

@@ -130,6 +130,15 @@ export const defaultfs = async function () {
                                                 type: "file"
                                             },
                                             content: "Credits: \n\nTerminal base\nSource: https://github.com/m4tt72/terminal\n\nGUI inspiration (webKDE)\nSource: https://github.com/baroxyton/webKDE\n\nKDE idea & concept: https://kde.org\n\nBreeze dark & light theme\nLicense: LGPL\nSource: https://github.com/KDE/breeze/\n\npath.js browserify port\nLicense: MIT\nSource: https://github.com/browserify/path-browserify/blob/master/LICENSE\n\nbash tokonizer\nLicense: MIT\nSource: https://github.com/substack/node-shell-quote"
+                                        },
+                                        "LinkedIn.desktop": {
+                                            meta: {
+                                                changeDate: 0,
+                                                owner: "demo",
+                                                permission: [7, 5, 5],
+                                                type: "file"
+                                            },
+                                            content: "[Desktop Entry]\nName=LinkedIn\nExec=browser /home/demo/Documents/linkedin.html\nIcon=/usr/share/icons/breeze-dark/apps/linkedin.svg\nType=Application"
                                         }
                                     }
                                 },
@@ -159,6 +168,7 @@ export const defaultfs = async function () {
                                             },
                                             content: `{
                                                 "text/plain":"kate",
+                                                "text/html":"browser",
                                                 "application/json":"kate",
                                                 "inode/directory":"dolphin",
                                                 "image/png":"gwenview",
@@ -213,7 +223,17 @@ export const defaultfs = async function () {
                                         permission: [7, 5, 5],
                                         type: "dir"
                                     },
-                                    content: {}
+                                    content: {
+                                        "linkedin.html": {
+                                            meta: {
+                                                changeDate: 0,
+                                                owner: "demo",
+                                                permission: [7, 5, 5],
+                                                type: "file"
+                                            },
+                                            content: await download("/assets/linkedin.html")
+                                        }
+                                    }
                                 }
                             }
                         }

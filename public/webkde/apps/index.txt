@@ -7,3 +7,4 @@ konsole/
 appSelect/
 photopea/
 settings/
+browser/

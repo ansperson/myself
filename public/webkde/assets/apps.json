@@ -90,6 +90,19 @@
         },
         "content": "[Desktop Entry]\nName=Settings\nExec=settings\nIcon=/usr/share/icons/breeze-dark/apps/systemsettings.svg\nCategories=system"
     },
+    "browser.desktop": {
+        "meta": {
+            "changeDate": 0,
+            "owner": "root",
+            "permission": [
+                7,
+                5,
+                5
+            ],
+            "type": "file"
+        },
+        "content": "[Desktop Entry]\nName=Browser\nExec=browser %U\nIcon=/usr/share/icons/breeze-dark/apps/internet-web-browser.svg\nCategories=internet\nMimeType=text/html"
+    },
     "piped.desktop": {
         "meta": {
             "changeDate": 0,

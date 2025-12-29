@@ -3,6 +3,7 @@ import DesktopApp from "./icons.js";
 import Panel from "./panel.js";
 import DesktopMenu from "./menu.js";
 import toMime from "./toMime.js";
+import parseDesktopFile from "./parseDesktopFile.js";
 import DesktopDrag from "./desktopDrag.js";
 import "./windowmanager.js"
 import * as linux from "../linuxCore/index.js";
@@ -102,6 +103,7 @@ class Desktop {
         let preparedApps = apps.map((app, index, apps) => {
             let result = {};
             result.name = app;
+            result.displayName = app;
             let meta = linux.fileapi.internal.readMeta("/home/demo/Desktop/" + app);
             result.meta = meta;
 
@@ -111,6 +113,11 @@ class Desktop {
             }
             else {
                 result.icon = "/usr/share/icons/breeze-dark/mimetypes/" + toMime(app).replace("/", "-") + ".svg";
+            }
+            if (app.endsWith(".desktop")) {
+                let desktopEntry = parseDesktopFile(linux.fileapi.internal.read("/home/demo/Desktop/" + app))["Desktop Entry"] || {};
+                result.displayName = (desktopEntry.Name && desktopEntry.Name[0]) || app;
+                result.icon = (desktopEntry.Icon && desktopEntry.Icon[0]) || result.icon;
             }
 
             // Position in desktop grid
@@ -123,7 +130,7 @@ class Desktop {
 
         // Generate app icons and store them in desktop instance
         preparedApps.forEach(element => {
-            let app = new DesktopApp(element.name, element.icon, element.position, config.apps);
+            let app = new DesktopApp(element.name, element.icon, element.position, config.apps, element.displayName);
             this.apps.push(app);
         });
     }

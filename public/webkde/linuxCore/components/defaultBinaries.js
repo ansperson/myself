@@ -331,7 +331,7 @@ let defaultBinaries = {
 	help: compile(async function(){
 		api.io.stdout.output.write(`Supported shortcuts: Ctl+L (clear terminal), Ctl+C (kill running process), Ctl+D (exit terminal)
 
-			List of commands can be obtained with 'ls /bin': cd, exit, sleep, ls, cat, echo, whoami, sudo, touch, grep, curl, clear, pwd, nano, compile, javascript, mkdir, err:notfound, kate, dolphin, gwenview, konsole, minipaint, chessgame, xdg-open, settings, piped-tube, code, photopea
+			List of commands can be obtained with 'ls /bin': cd, exit, sleep, ls, cat, echo, whoami, sudo, touch, grep, curl, clear, pwd, nano, compile, javascript, mkdir, err:notfound, kate, dolphin, gwenview, konsole, minipaint, chessgame, xdg-open, settings, piped-tube, code, photopea, browser
 
 			Supported  bash features: piping (|), seperation with semicolon (sleep 5; echo hello world), piping into (echo test > test.txt), substitution (echo $(echo hello)), math substitution (echo $((1+1)))
 
@@ -381,6 +381,9 @@ let defaultBinaries = {
 	}),
 	"photopea": compile(async function () {
 		api.spawnWindow("file:///usr/share/apps/photopea/index.html", { location: api.args[0] });
+	}),
+	"browser": compile(async function () {
+		api.spawnWindow("file:///usr/share/apps/browser/index.html", { location: api.args[0] });
 	})
 };
 //commands implemented so far:

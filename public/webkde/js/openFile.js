@@ -4,6 +4,17 @@ import toMime from "./toMime.js"
 // Open file in correct application
 // Usage: openFile(filePath, Mime type (optional))
 function openFile(filePath, mime) {
+    if (filePath.endsWith(".desktop")) {
+        let desktopFile = parseDesktopFile(debug.fileapi.internal.read(filePath));
+        let exec = desktopFile?.["Desktop Entry"]?.Exec?.[0];
+        if (exec) {
+            let command = exec.replace(/%[fFuU]/g, "").trim();
+            if (command) {
+                debug.runCommand(command);
+            }
+        }
+        return;
+    }
     let defaultMimes = JSON.parse(debug.fileapi.internal.read("/home/demo/.config/mime.json"));
     mime = mime || toMime(filePath);
     let application;

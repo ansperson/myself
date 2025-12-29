@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Browser</title>
+    <link rel="stylesheet" href="{{file:/usr/share/apps/browser/index.css}}">
+</head>
+<body>
+    <div class="browser">
+        <div class="toolbar">
+            <div class="nav">
+                <button class="iconbtn" id="back" icon="/usr/share/icons/breeze-dark/actions/go-previous.svg" aria-label="Back"></button>
+                <button class="iconbtn" id="forward" icon="/usr/share/icons/breeze-dark/actions/go-next.svg" aria-label="Forward"></button>
+                <button class="iconbtn" id="refresh" icon="/usr/share/icons/breeze-dark/actions/view-refresh.svg" aria-label="Refresh"></button>
+            </div>
+            <div class="addressbar">
+                <div class="lock" icon="/usr/share/icons/breeze-dark/actions/lock.svg"></div>
+                <input id="address" type="text" readonly>
+            </div>
+            <div class="spacer"></div>
+            <button class="iconbtn" id="open" icon="/usr/share/icons/breeze-dark/actions/document-open.svg" aria-label="Open file"></button>
+        </div>
+        <div class="banner hidden" id="banner">
+            <span id="banner-text">If you want to see the full profile on LinkedIn click here.</span>
+            <button class="cta" id="open-banner">Open in LinkedIn</button>
+            <button class="iconbtn close" id="close-banner" icon="/usr/share/icons/breeze-dark/actions/gtk-close.svg" aria-label="Close"></button>
+        </div>
+        <div class="content">
+            <iframe id="page" title="Browser content"></iframe>
+            <div id="error" class="error hidden"></div>
+        </div>
+    </div>
+    <script type="module" src="{{file:/usr/share/apps/browser/index.js}}"></script>
+</body>
+</html>
