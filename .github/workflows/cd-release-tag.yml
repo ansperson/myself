@@ -1,0 +1,28 @@
+# .github/workflows/auto-tag.yml
+name: cd-tag-release
+
+# Trigger on any push to main (including merges)
+on:
+  push:
+    branches:
+      - main
+
+# Allow this workflow to push tags back to the repo
+permissions:
+  contents: write
+
+jobs:
+  bump-and-tag:
+    # Skip running on the automated bump commit itself
+    if: "!startsWith(github.event.head_commit.message, 'bump:')"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the full history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0            # so Commitizen can see the latest tag
+
+      - name: Bump version & create tag
+        uses: commitizen-tools/commitizen-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}

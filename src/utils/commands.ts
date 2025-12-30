@@ -3,6 +3,8 @@ import aboutMe from '../../aboutme.json'
 import themes from '../../themes.json';
 import { history } from '../stores/history';
 import { theme } from '../stores/theme';
+import { booting, runlevel } from '../stores/runlevel';
+import { systemHome } from './systemConfig';
 
 const hostname = window.location.hostname;
 //"top [number]" command: This command displays the top "number" most relevant projects based on user input (e.g., "top 3 web development projects").
@@ -38,6 +40,77 @@ export const commands: Record<string, (args: string[]) => Promise<string> | stri
   date: () => new Date().toLocaleString(),
   emacs: () => `why use emacs? try 'vim'`,
   echo: (args: string[]) => args.join(' '),
+  init: (args: string[]) => {
+    const usage = `Usage: init [runlevel].
+    [runlevel]:
+      3: terminal (default)
+      5: GUI (webKDE)
+
+    [Examples]:
+      init 3
+      init 5
+    `;
+
+    if (args.length !== 1) {
+      return usage;
+    }
+
+    const nextLevel = Number.parseInt(args[0], 10);
+    if (Number.isNaN(nextLevel)) {
+      return usage;
+    }
+
+    if (nextLevel === 3) {
+      booting.set(false);
+      runlevel.set(3);
+      return 'Switched to runlevel 3 (terminal).';
+    }
+
+    if (nextLevel === 5) {
+      booting.set(true);
+      const bootMessages = [
+        'Starting systemd user sessions...',
+        '[ OK ] Reached target Basic System.',
+        '[ OK ] Started udev Kernel Device Manager.',
+        `[ OK ] Mounted ${systemHome}.`,
+        '[ OK ] Started Network Manager.',
+        '[ OK ] Started Login Service.',
+        '[ OK ] Reached target Multi-User System.',
+        '[ OK ] Started Display Manager.',
+        '[ OK ] Reached target Graphical Interface.',
+        'Starting webKDE (graphical mode)...',
+        'Switching to runlevel 5 (webKDE)...'
+      ];
+      let entryIndex = -1;
+      history.update((items) => {
+        entryIndex = items.length;
+        return [...items, { command: 'init 5', outputs: [] }];
+      });
+      bootMessages.forEach((line, index) => {
+        setTimeout(() => {
+          history.update((items) => {
+            const entry = items[entryIndex];
+            if (!entry) {
+              return items;
+            }
+            const outputs = [...entry.outputs, line];
+            const nextItems = [...items];
+            nextItems[entryIndex] = { ...entry, outputs };
+            return nextItems;
+          });
+          if (index === bootMessages.length - 1) {
+            setTimeout(() => {
+              runlevel.set(5);
+              booting.set(false);
+            }, 500);
+          }
+        }, 500 * index);
+      });
+      return '';
+    }
+
+    return `Runlevel '${args[0]}' is not supported. Use 3 or 5.`;
+  },
   sudo: (args: string[]) => {
     window.open(packageJson.social.url);
 

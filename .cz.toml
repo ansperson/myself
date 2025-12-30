@@ -1,0 +1,16 @@
+[tool.commitizen]
+name = "cz_customize"
+version = "0.17.0"
+tag_format = "v$version"
+
+[tool.commitizen.customize]
+# Allow:
+#  • feat: …
+#  • feat!: …   ← breaking change only on feat
+#  • fix: …
+#  • chore: …
+schema_pattern = "^(?:feat(?:\\([^)]+\\))?!?|fix(?:\\([^)]+\\))?|chore(?:\\([^)]+\\))?): .+$"
+schema         = "<type>(<scope>)!?: <description>"
+example        = "feat!: drop old auth endpoint"
+bump_pattern = "^(feat!?|fix!?|chore!?|BREAKING CHANGE)"
+bump_map = { feat = "MINOR", fix = "PATCH", chore = "PATCH", "BREAKING CHANGE" = "MAJOR" }

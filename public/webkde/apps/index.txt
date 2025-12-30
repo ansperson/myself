@@ -1,0 +1,10 @@
+dialog/
+gwenview/
+kate/
+dolphin/
+properties/
+konsole/
+appSelect/
+photopea/
+settings/
+browser/

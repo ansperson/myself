@@ -4,7 +4,24 @@
 ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/ansperson/myself/pages.yml?style=flat-square&label=Actions)
 ![OSSF-Scorecard Score](https://img.shields.io/ossf-scorecard/github.com/ansperson/myself?style=flat-square&label=openssf%20scorecard)
 
-## Quick Start
+## About
+
+This repository showcases an interactive terminal-based portfolio and curriculum vitae. The project implements a fully interactive terminal interface that allows visitors to explore my professional background, projects, and skills through a command-line experience or in a grafical mode.
+
+The project applies the latest standards in:
+- **Automation**: CI/CD pipelines, automated versioning, dependency management, and deployment workflows
+- **Security**: OSSF Scorecard compliance, security scanning, and best practices
+- **Development**: Modern tooling, code quality checks, and maintainable architecture
+
+All credits and attributions for the technologies and resources used can be found in `credits.txt` when running the application in GUI mode.
+
+## Quick Start (For development only)
+
+0. Set up pre-commit
+
+```bash
+pre-commit install
+```
 
 ### Using docker (recommended)
 
@@ -12,13 +29,13 @@
 docker run -d --name terminal -p 3000:3000 .
 ```
 
-### Using npm/yarn
-
-0. Set up pre-commit
+or
 
 ```bash
-pre-commit install
+docker compose up --build --force-recreate -d
 ```
+
+### Running Local
 
 1. Install dependencies:
 
@@ -31,11 +48,3 @@ yarn install
 ```bash
 yarn dev
 ```
-
-## Source Project
-
-[Terminal](https://github.com/m4tt72/terminal)
-
-## TODO
-
-[] Add terraform Vercel and Netlify
