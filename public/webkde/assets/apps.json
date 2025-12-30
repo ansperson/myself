@@ -75,7 +75,7 @@
             ],
             "type": "file"
         },
-        "content": "[Desktop Entry]\nName=Chess\nExec=chessgame\nIcon=/usr/share/icons/breeze-dark/actions/milestone.svg\nCategories=games"
+        "content": "[Desktop Entry]\nName=Chess\nExec=chessgame\nIcon=/usr/share/icons/breeze-dark/apps/knights.svg\nCategories=games"
     },
     "settings.desktop": {
         "meta": {
