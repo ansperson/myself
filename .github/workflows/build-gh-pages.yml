@@ -1,5 +1,5 @@
 ---
-name: GitHub Pages
+name: build-gh-pages
 
 on:
   push:
@@ -8,12 +8,13 @@ on:
 
 jobs:
   build:
+    if: "!startsWith(github.event.head_commit.message, 'bump:')"
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6.0.1
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: 20
       - name: Install dependencies
@@ -40,6 +41,7 @@ jobs:
           path: dist
 
   deploy:
+    if: "!startsWith(github.event.head_commit.message, 'bump:')"
     needs: build
     runs-on: ubuntu-latest
     permissions:
