@@ -1,6 +1,8 @@
 //import OSApi from "../../appApi/frontend/api.js"
 import OSApi from "{{file:/usr/lib/api/api.js}}";
 let api = new OSApi();
+let systemHome = "/home/demo";
+let systemUser = "demo";
 let categories = [
     "education",
     "engeineering",
@@ -20,6 +22,7 @@ let categories = [
 let assignedApplications = {};
 let renderedCategories = [];
 let renderedApps = [];
+const userNameElement = document.getElementById("user-name");
 function parseApp(data) {
     let result = {};
     let sections = data.split("\n\n");
@@ -80,10 +83,10 @@ class App {
                 text: "Pin to panel",
                 icon: "/usr/share/icons/breeze-dark/actions/pin.svg",
                 action: async () => {
-                    let config = JSON.parse((await api.filesystem("read", "/home/demo/.config/plasma.json")).read().content);
+                    let config = JSON.parse((await api.filesystem("read", `${systemHome}/.config/plasma.json`)).read().content);
                     console.log(config);
                     config.desktop.panels[0].items.find(item=>item.type == "AppsWidget").config.apps.push(this.appData.location);
-                    await api.filesystem("write", "/home/demo/.config/plasma.json", {content:JSON.stringify(config)});
+                    await api.filesystem("write", `${systemHome}/.config/plasma.json`, {content:JSON.stringify(config)});
                     this.remove();
                 }
             }])
@@ -178,6 +181,11 @@ document.getElementById("search").addEventListener("keyup", filterApps);
 // Got api data (user, application arguments and all that stuff)
 api.loadIcons()
 api.gotData.then(async () => {
+    systemUser = api.data.user;
+    systemHome = (await api.readEnv("HOME")).read();
+    if (userNameElement) {
+        userNameElement.textContent = systemUser;
+    }
     // Render window
     api.done();
 });

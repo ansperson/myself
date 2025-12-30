@@ -1,5 +1,6 @@
 import parseDesktopFile from "./parseDesktopFile.js";
 import toMime from "./toMime.js"
+import { SYSTEM_HOME } from "./systemConfig.js";
 
 // Open file in correct application
 // Usage: openFile(filePath, Mime type (optional))
@@ -15,7 +16,7 @@ function openFile(filePath, mime) {
         }
         return;
     }
-    let defaultMimes = JSON.parse(debug.fileapi.internal.read("/home/demo/.config/mime.json"));
+    let defaultMimes = JSON.parse(debug.fileapi.internal.read(`${SYSTEM_HOME}/.config/mime.json`));
     mime = mime || toMime(filePath);
     let application;
     let apps = debug.fileapi.internal.read("/usr/share/applications/");

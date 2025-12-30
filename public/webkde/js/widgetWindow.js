@@ -2,6 +2,7 @@ import ProgramApi from "../appApi/backend/api.js";
 import WebKWin from "./windowmanager.js";
 import { checkPermission } from "../linuxCore/components/checkPermission.js"
 import toMime from "./toMime.js";
+import { SYSTEM_USER } from "./systemConfig.js";
 
 // Popup for panel widgets
 // Compatiple with app api
@@ -28,7 +29,7 @@ class WidgetWindow {
     // Load file from webstorage FS
     loadLocalFile(path) {
         let file = debug.fileapi.internal.getFile(path);
-        if (file instanceof Error || file.meta.type == "dir" || !checkPermission("demo", file, "r")) {
+        if (file instanceof Error || file.meta.type == "dir" || !checkPermission(SYSTEM_USER, file, "r")) {
             return "data:text/html,";
         }
         return `data:${toMime(path)};base64,${btoa(file.content.replaceAll(/\{\{file\:(.*?)\}\}/g, (_, location) => {
@@ -43,7 +44,7 @@ class WidgetWindow {
             this.element.classList.add("widgetWindow");
             this.cover.classList.add("windowcover");
         }
-        this.api = new ProgramApi("demo", this, this.element);
+        this.api = new ProgramApi(SYSTEM_USER, this, this.element);
         this.element.style.left = this.cover.style.left = this.position.x + "px";
         this.element.style.top = this.cover.style.top = this.position.y + "px";
         this.element.style.width = this.cover.style.width = this.config.width || "30vh";

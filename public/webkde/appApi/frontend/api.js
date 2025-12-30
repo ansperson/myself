@@ -1,5 +1,6 @@
 import Channel from "./communication.js"
 import ThemeLoader from "./themeLoader.js"
+import { SYSTEM_HOME } from "../../js/systemConfig.js"
 let api;
 class OSApi {
     constructor() {
@@ -285,7 +286,7 @@ class ConfigInterface {
     constructor(name, fields) {
         this.name = name;
         this.fields = fields;
-        this.configLocation = "/home/demo/.config/apps/" + this.name + ".json";
+        this.configLocation = `${SYSTEM_HOME}/.config/apps/${this.name}.json`;
         this.ready = this.fetchContents();
         setInterval(()=>this.update(), 500)
     }

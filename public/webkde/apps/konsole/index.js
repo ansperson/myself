@@ -5,7 +5,8 @@ let caretPosition = 0;
 let ttyLocation = "/home/demo";
 let user = "demo";
 let commandIsRunning = false;
-let preinput = "demo@linux:/ $";
+let preinput = `${user}@linux:~ $`;
+document.getElementById("user").innerText = preinput;
 async function updatePreinput() {
 	user = api.data.user;
 	ttyLocation = (await api.readEnv("PWD")).read();

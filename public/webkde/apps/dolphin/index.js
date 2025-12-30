@@ -1,6 +1,7 @@
 import OSApi from "{{file:/usr/lib/api/api.js}}";
 import Icon from "{{file:/usr/share/apps/dolphin/icons.js}}"
 let api = new OSApi();
+let systemHome = "/home/demo";
 let favoriteStore = new api.Config("dolphin",[{
     name: "favorites",
     type: "list",
@@ -9,31 +10,31 @@ let favoriteStore = new api.Config("dolphin",[{
         {
             name: "Home",
             icon: "/usr/share/icons/breeze-dark/places/user-home.svg",
-            location: "/home/demo"
+            location: systemHome
         },
         {
             name: "Desktop",
             icon: "/usr/share/icons/breeze-dark/places/user-desktop.svg",
-            location: "/home/demo/Desktop"
+            location: `${systemHome}/Desktop`
         }, {
             name: "Pictures",
             icon: "/usr/share/icons/breeze-dark/places/folder-pictures.svg",
-            location: "/home/demo/Pictures"
+            location: `${systemHome}/Pictures`
         },
         {
             name: "Downloads",
             icon: "/usr/share/icons/breeze-dark/places/folder-downloads.svg",
-            location: "/home/demo/Downloads"
+            location: `${systemHome}/Downloads`
         },
         {
             name: "Documents",
             icon: "/usr/share/icons/breeze-dark/places/folder-documents.svg",
-            location: "/home/demo/Documents"
+            location: `${systemHome}/Documents`
         }]
 }]);
 window.locationHistory = [];
 window.historyPosition = 0;
-window.cwd = "/home/demo"
+window.cwd = systemHome;
 function done() {
     api.done({
         title: "Dolphin",
@@ -43,7 +44,7 @@ function done() {
 let loadedIcons = [];
 async function loadContent(path, navigate) {
     if (!path?.startsWith("/")) {
-        path = "/home/demo/" + path;
+        path = `${systemHome}/${path}`;
     }
     if (!navigate) {
         locationHistory.push(path);
@@ -82,6 +83,17 @@ window.filechooser = false;
 window.allowedFiletypes = [];
 api.gotData.then(async () => {
     let data = api.data;
+    systemHome = (await api.readEnv("HOME")).read();
+    window.cwd = systemHome;
+    favoriteStore.ready.then(() => {
+        favoriteStore.data[0].value = favoriteStore.data[0].value.map(entry => {
+            if (entry.location?.startsWith("/home/demo")) {
+                return { ...entry, location: entry.location.replace("/home/demo", systemHome) };
+            }
+            return entry;
+        });
+        loadFavorites(favoriteStore.data[0]);
+    });
     let location = data.args.location;
     let isFileChooser = data.args.chooser;
     let types = data.args.allowedFiletypes;
@@ -93,7 +105,7 @@ api.gotData.then(async () => {
     if (isFileChooser) {
         loadFileSelector(types);
     }
-    await loadContent("/home/demo");
+    await loadContent(systemHome);
     done();
 });
 function loadFileSelector(types) {

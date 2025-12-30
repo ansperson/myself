@@ -1,6 +1,7 @@
 "use strict";
 import DesktopMenu from "./menu.js";
 import WebKWin from "./windowmanager.js";
+import { SYSTEM_HOME, SYSTEM_USER } from "./systemConfig.js";
 
 // Desktop icon
 class DesktopApp {
@@ -78,7 +79,7 @@ class DesktopApp {
                 text: "Open",
                 icon: "/usr/share/icons/breeze-dark/actions/quickopen-file.svg",
                 action: () => {
-                    desktop.openFile("/home/demo/Desktop/" + this.fileName)
+                    desktop.openFile(`${SYSTEM_HOME}/Desktop/${this.fileName}`)
                 }
             },
             {
@@ -86,7 +87,7 @@ class DesktopApp {
                 icon: "/usr/share/icons/breeze-dark/categories/applications-other.svg",
                 seperator: true,
                 action: () => {
-                    new desktop.window("file:///usr/share/apps/appSelect/index.html", { file: "/home/demo/Desktop/" + this.fileName });
+                    new desktop.window("file:///usr/share/apps/appSelect/index.html", { file: `${SYSTEM_HOME}/Desktop/${this.fileName}` });
                 }
             },
             {
@@ -104,7 +105,7 @@ class DesktopApp {
                             return;
                         }
                         let newName = data.read();
-                        debug.fileapi.internal.move("/home/demo/Desktop/" + this.fileName, "/home/demo/Desktop/" + newName);
+                        debug.fileapi.internal.move(`${SYSTEM_HOME}/Desktop/${this.fileName}`, `${SYSTEM_HOME}/Desktop/${newName}`);
                         this.fileName = newName;
                         this.displayName = newName;
                         this.render();
@@ -125,7 +126,7 @@ class DesktopApp {
                             return;
                         }
                         if (data.read() == "1") {
-                            debug.fileapi.internal.delete("/home/demo/Desktop/" + this.fileName);
+                            debug.fileapi.internal.delete(`${SYSTEM_HOME}/Desktop/${this.fileName}`);
                             this.remove();
                         }
                     }
@@ -135,7 +136,7 @@ class DesktopApp {
                 icon: "/usr/share/icons/breeze-dark/actions/document-properties.svg",
                 action: () => {
                     new WebKWin("file:///usr/share/apps/properties/index.html", {
-                        path: "/home/demo/Desktop/" + this.fileName
+                        path: `${SYSTEM_HOME}/Desktop/${this.fileName}`
                     })
                 }
             }]);
@@ -194,7 +195,7 @@ class DesktopApp {
             this.appElement.style.top = (event.pageY - this.mousedownPosition.y) + "px";
         });
         this.appElement.addEventListener("dblclick", () => {
-            desktop.openFile("/home/demo/Desktop/" + this.fileName)
+            desktop.openFile(`${SYSTEM_HOME}/Desktop/${this.fileName}`)
         });
     }
 
@@ -208,7 +209,7 @@ class DesktopApp {
         this.position.y = Math.round((this.movePosition.y + 5 - this.mousedownPosition.y) / (40 + iconHeight));
 
         desktop.config.desktop.icons[this.fileName] = { position: { x: this.position.x, y: this.position.y } };
-        debug.fileapi.internal.write("demo", "/home/demo/.config/plasma.json", JSON.stringify(desktop.config));
+        debug.fileapi.internal.write(SYSTEM_USER, `${SYSTEM_HOME}/.config/plasma.json`, JSON.stringify(desktop.config));
         this.render();
     }
 };

@@ -3,6 +3,7 @@ import ProgramApi from "../appApi/backend/api.js";
 import DesktopMenu from "./menu.js"
 import { checkPermission } from "../linuxCore/components/checkPermission.js"
 import toMime from "./toMime.js";
+import { SYSTEM_USER } from "./systemConfig.js";
 
 // Window manager class
 class WebKWin {
@@ -27,7 +28,7 @@ class WebKWin {
 
     loadLocalFile(path) {
         let file = debug.fileapi.internal.getFile(path);
-        if (file instanceof Error || file.meta.type == "dir" || !checkPermission("demo", file, "r")) {
+        if (file instanceof Error || file.meta.type == "dir" || !checkPermission(SYSTEM_USER, file, "r")) {
             return "data:text/html,";
         }
         return `data:${toMime(path)};base64,${btoa(file.content.replaceAll(/\{\{file\:(.*?)\}\}/g, (_, location) => {
@@ -74,7 +75,7 @@ class WebKWin {
             this.iframeHolder.appendChild(this.contentElement);
             this.element.appendChild(this.iframeHolder);
             document.getElementById("desktop").appendChild(this.element, "windows");
-            this.api = new ProgramApi("demo", this);
+            this.api = new ProgramApi(SYSTEM_USER, this);
             this.element.style.left = this.position.x + "px";
             this.element.style.top = this.position.y + "px";
 

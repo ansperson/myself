@@ -1,4 +1,7 @@
 import { defaultBinaries } from "./defaultBinaries.js"
+import { SYSTEM_HOME, SYSTEM_USER } from "../../js/systemConfig.js"
+
+const homeReplace = (value) => value.replaceAll("/home/demo", SYSTEM_HOME);
 async function download(url) {
     if (localStorage.downloaded) {
         return "{}";
@@ -69,6 +72,7 @@ async function downloadDirectory(url, isbinary) {
 };
 
 export const defaultfs = async function () {
+    const plasmaConfig = homeReplace(await download("/assets/plasmaConfig.json"));
     let fs = {
         "/": {
             meta: {
@@ -97,10 +101,10 @@ export const defaultfs = async function () {
                         type: "dir"
                     },
                     content: {
-                        "demo": {
+                        [SYSTEM_USER]: {
                             meta: {
                                 changeDate: 0,
-                                owner: "demo",
+                                owner: SYSTEM_USER,
                                 permission: [7, 5, 5],
                                 type: "dir"
                             },
@@ -108,7 +112,7 @@ export const defaultfs = async function () {
                                 "welcome.txt": {
                                     meta: {
                                         changeDate: 0,
-                                        owner: "demo",
+                                        owner: SYSTEM_USER,
                                         permission: [7, 5, 5],
                                         type: "file"
                                     },
@@ -117,7 +121,7 @@ export const defaultfs = async function () {
                                 "Desktop": {
                                     meta: {
                                         changeDate: 0,
-                                        owner: "demo",
+                                        owner: SYSTEM_USER,
                                         permission: [7, 5, 5],
                                         type: "dir"
                                     },
@@ -125,7 +129,7 @@ export const defaultfs = async function () {
                                         "credits.txt": {
                                             meta: {
                                                 changeDate: 0,
-                                                owner: "demo",
+                                                owner: SYSTEM_USER,
                                                 permission: [7, 5, 5],
                                                 type: "file"
                                             },
@@ -134,18 +138,18 @@ export const defaultfs = async function () {
                                         "LinkedIn.desktop": {
                                             meta: {
                                                 changeDate: 0,
-                                                owner: "demo",
+                                                owner: SYSTEM_USER,
                                                 permission: [7, 5, 5],
                                                 type: "file"
                                             },
-                                            content: "[Desktop Entry]\nName=LinkedIn\nExec=browser /home/demo/Documents/linkedin.html\nIcon=/usr/share/icons/breeze-dark/apps/linkedin.svg\nType=Application"
+                                            content: homeReplace("[Desktop Entry]\nName=LinkedIn\nExec=browser /home/demo/Documents/linkedin.html\nIcon=/usr/share/icons/breeze-dark/apps/linkedin.svg\nType=Application")
                                         }
                                     }
                                 },
                                 ".config": {
                                     meta: {
                                         changeDate: 0,
-                                        owner: "demo",
+                                        owner: SYSTEM_USER,
                                         permission: [7, 5, 5],
                                         type: "dir"
                                     },
@@ -153,16 +157,16 @@ export const defaultfs = async function () {
                                         "plasma.json": {
                                             meta: {
                                                 changeDate: 0,
-                                                owner: "demo",
+                                                owner: SYSTEM_USER,
                                                 permission: [7, 5, 5],
                                                 type: "file"
                                             },
-                                            content: await download("/assets/plasmaConfig.json")
+                                            content: plasmaConfig
                                         },
                                         "mime.json": {
                                             meta: {
                                                 changeDate: 0,
-                                                owner: "demo",
+                                                owner: SYSTEM_USER,
                                                 permission: [7, 5, 5],
                                                 type: "file"
                                             },
@@ -180,7 +184,7 @@ export const defaultfs = async function () {
                                         "apps": {
                                             meta: {
                                                 changeDate: 0,
-                                                owner: "demo",
+                                                owner: SYSTEM_USER,
                                                 permission: [7, 5, 5],
                                                 type: "dir"
                                             },
@@ -191,7 +195,7 @@ export const defaultfs = async function () {
                                 "Pictures": {
                                     meta: {
                                         changeDate: 0,
-                                        owner: "demo",
+                                        owner: SYSTEM_USER,
                                         permission: [7, 5, 5],
                                         type: "dir"
                                     },
@@ -199,7 +203,7 @@ export const defaultfs = async function () {
                                         "wallpaper.png": {
                                             meta: {
                                                 changeDate: 0,
-                                                owner: "demo",
+                                                owner: SYSTEM_USER,
                                                 permission: [7, 5, 5],
                                                 type: "file"
                                             },
@@ -210,7 +214,7 @@ export const defaultfs = async function () {
                                 "Downloads": {
                                     meta: {
                                         changeDate: 0,
-                                        owner: "demo",
+                                        owner: SYSTEM_USER,
                                         permission: [7, 5, 5],
                                         type: "dir"
                                     },
@@ -219,7 +223,7 @@ export const defaultfs = async function () {
                                 "Documents": {
                                     meta: {
                                         changeDate: 0,
-                                        owner: "demo",
+                                        owner: SYSTEM_USER,
                                         permission: [7, 5, 5],
                                         type: "dir"
                                     },
@@ -227,7 +231,7 @@ export const defaultfs = async function () {
                                         "linkedin.html": {
                                             meta: {
                                                 changeDate: 0,
-                                                owner: "demo",
+                                                owner: SYSTEM_USER,
                                                 permission: [7, 5, 5],
                                                 type: "file"
                                             },

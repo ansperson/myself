@@ -10,6 +10,7 @@ import * as linux from "../linuxCore/index.js";
 import ThemeLoader from "./themeparser.js"
 import WebKWin from "./windowmanager.js"
 import openFile from "./openFile.js"
+import { SYSTEM_HOME, SYSTEM_USER } from "./systemConfig.js";
 let config;
 
 // Override appendChild to keep track of z-index
@@ -82,7 +83,7 @@ class Desktop {
     }
     // (Re-)render desktop
     render() {
-        config = JSON.parse(linux.fileapi.internal.read("/home/demo/.config/plasma.json"));
+        config = JSON.parse(linux.fileapi.internal.read(`${SYSTEM_HOME}/.config/plasma.json`));
         this.config = config;
         this.theme.changeTheme(linux.fileapi.internal.read("/usr/share/themes/" + this.config.desktop.theme));
         this.element.style.backgroundImage = `url("data:image/png;base64,${btoa(linux.fileapi.internal.read(this.config.desktop.backgroundimage))}")`;
@@ -97,14 +98,14 @@ class Desktop {
         this.apps = [];
 
         // Get list of file names on desktop
-        let apps = linux.fileapi.internal.list("/home/demo/Desktop");
+        let apps = linux.fileapi.internal.list(`${SYSTEM_HOME}/Desktop`);
 
         // Generate correct app elements using the name 
         let preparedApps = apps.map((app, index, apps) => {
             let result = {};
             result.name = app;
             result.displayName = app;
-            let meta = linux.fileapi.internal.readMeta("/home/demo/Desktop/" + app);
+            let meta = linux.fileapi.internal.readMeta(`${SYSTEM_HOME}/Desktop/${app}`);
             result.meta = meta;
 
             // Attempt to set correct icon using MIME type
@@ -115,7 +116,7 @@ class Desktop {
                 result.icon = "/usr/share/icons/breeze-dark/mimetypes/" + toMime(app).replace("/", "-") + ".svg";
             }
             if (app.endsWith(".desktop")) {
-                let desktopEntry = parseDesktopFile(linux.fileapi.internal.read("/home/demo/Desktop/" + app))["Desktop Entry"] || {};
+                let desktopEntry = parseDesktopFile(linux.fileapi.internal.read(`${SYSTEM_HOME}/Desktop/${app}`))["Desktop Entry"] || {};
                 result.displayName = (desktopEntry.Name && desktopEntry.Name[0]) || app;
                 result.icon = (desktopEntry.Icon && desktopEntry.Icon[0]) || result.icon;
             }
@@ -174,7 +175,7 @@ class Desktop {
                         prompt.api.channel.onevent = data => {
                             if (data.event == "quit") {
                                 let name = data.read();
-                                linux.fileapi.internal.mkdir("demo", `/home/demo/Desktop/${name}`);
+                                linux.fileapi.internal.mkdir(SYSTEM_USER, `${SYSTEM_HOME}/Desktop/${name}`);
                                 this.renderApps();
                             }
                         }
@@ -192,7 +193,7 @@ class Desktop {
                         prompt.api.channel.onevent = data => {
                             if (data.event == "quit") {
                                 let name = data.read();
-                                linux.fileapi.internal.write("demo", `/home/demo/Desktop/${name}`, "");
+                                linux.fileapi.internal.write(SYSTEM_USER, `${SYSTEM_HOME}/Desktop/${name}`, "");
                                 this.renderApps();
                             }
                         }
@@ -204,7 +205,7 @@ class Desktop {
                 icon: "/usr/share/icons/breeze-dark/apps/system-file-manager.svg",
                 action: () => {
                     new WebKWin("file:///usr/share/apps/dolphin/index.html", {
-                        location: "/home/demo/Desktop"
+                        location: `${SYSTEM_HOME}/Desktop`
                     })
                 }
             },
@@ -218,7 +219,7 @@ class Desktop {
                 icon: "/usr/share/icons/breeze-dark/actions/document-properties.svg",
                 action: () => {
                     new WebKWin("file:///usr/share/apps/properties/index.html", {
-                        path: "/home/demo/Desktop/"
+                        path: `${SYSTEM_HOME}/Desktop/`
                     })
                 }
             }
@@ -274,10 +275,13 @@ class Desktop {
             clickEvent.initMouseEvent("mousemove", true, true, window, 0, event.touches[0].screenX, event.touches[0].screenY, event.touches[0].clientX, event.touches[0].clientY);
             event.target.dispatchEvent(clickEvent);
         });
-        window.addEventListener("touchend", () => {
-            event = this.lastTouch;
+        window.addEventListener("touchend", event => {
+            const touch = event.changedTouches?.[0] || this.lastTouch?.touches?.[0];
+            if (!touch) {
+                return;
+            }
             let clickEvent = document.createEvent('MouseEvents');
-            clickEvent.initMouseEvent("mouseup", true, true, window, 0, event.touches[0].screenX, event.touches[0].screenY, event.touches[0].clientX, event.touches[0].clientY);
+            clickEvent.initMouseEvent("mouseup", true, true, window, 0, touch.screenX, touch.screenY, touch.clientX, touch.clientY);
             event.target.dispatchEvent(clickEvent);
         });
     }
@@ -302,7 +306,7 @@ class Desktop {
 // Render desktop
 linux.fileapi.onready.then(() => {
     // Load config
-    config = JSON.parse(linux.fileapi.internal.read("/home/demo/.config/plasma.json"));
+    config = JSON.parse(linux.fileapi.internal.read(`${SYSTEM_HOME}/.config/plasma.json`));
     new Desktop(config);
     // Flag to prevent needless downloading
     localStorage.downloaded = true;

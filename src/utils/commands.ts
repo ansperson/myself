@@ -4,6 +4,7 @@ import themes from '../../themes.json';
 import { history } from '../stores/history';
 import { theme } from '../stores/theme';
 import { booting, runlevel } from '../stores/runlevel';
+import { systemHome } from './systemConfig';
 
 const hostname = window.location.hostname;
 //"top [number]" command: This command displays the top "number" most relevant projects based on user input (e.g., "top 3 web development projects").
@@ -71,7 +72,7 @@ export const commands: Record<string, (args: string[]) => Promise<string> | stri
         'Starting systemd user sessions...',
         '[ OK ] Reached target Basic System.',
         '[ OK ] Started udev Kernel Device Manager.',
-        '[ OK ] Mounted /home/demo.',
+        `[ OK ] Mounted ${systemHome}.`,
         '[ OK ] Started Network Manager.',
         '[ OK ] Started Login Service.',
         '[ OK ] Reached target Multi-User System.',

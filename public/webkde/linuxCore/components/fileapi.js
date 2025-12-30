@@ -5,6 +5,7 @@ import { Pipe } from "./pipe.js"
 import { sleep } from "./sleep.js"
 import { path } from "../lib/path.js"
 import * as builders from "./fileBuilder.js"
+import { SYSTEM_HOME, SYSTEM_USER } from "../../js/systemConfig.js";
 let fileParse = path;
 let specialFiles = {
     "random": {
@@ -32,6 +33,7 @@ let specialFiles = {
 //filesystem database
 let filesystem = new IndexedObject("filesystem", defaultfs);
 window.fs = filesystem;
+const USER_STORAGE_KEY = "webkde.systemUser";
 //get direct reference to file
 export function getFile(fullpath) {
     // use path.join() to make processing easier
@@ -58,7 +60,19 @@ export function getFile(fullpath) {
 //file api
 export const fileapi = {
     //this is called when the database is ready to read/write
-    onready: filesystem.onready,
+    onready: filesystem.onready.then(() => {
+        const storedUser = localStorage.getItem(USER_STORAGE_KEY);
+        const homeExists = !(getFile(SYSTEM_HOME) instanceof Error);
+        if ((storedUser && storedUser !== SYSTEM_USER) || !homeExists) {
+            filesystem.reset();
+            localStorage.setItem(USER_STORAGE_KEY, SYSTEM_USER);
+            location.reload();
+            return;
+        }
+        if (!storedUser) {
+            localStorage.setItem(USER_STORAGE_KEY, SYSTEM_USER);
+        }
+    }),
     //fast access for priviliged scripts
     internal: {
         read: function (path) {

@@ -7,6 +7,7 @@ import { fileapi, getFile } from "./components/fileapi.js"
 import { mathParser } from "./components/mathparser.js"
 import { generateApi } from "./components/binaryApi.js"
 import { Pipe } from "./components/pipe.js"
+import { SYSTEM_HOME, SYSTEM_USER } from "../js/systemConfig.js"
 window.debug = { Pipe, bashParser, path, fileapi, parseCommand, runCommand, getCommandOutput, getFile }
 export let allCommands = [];
 export { fileapi };
@@ -27,18 +28,18 @@ function refreshCommands() {
 //some defaults
 export let data = {
     env: {
-        USER: "demo",
-        HOME: "/home/demo",
-        PWD: "/home/demo",
+        USER: SYSTEM_USER,
+        HOME: SYSTEM_HOME,
+        PWD: SYSTEM_HOME,
         PATH: "/bin:/usr/bin",
-        LOGNAME: "demo",
+        LOGNAME: SYSTEM_USER,
         EDITOR: "/bin/nano"
     },
     computer: "linux",
-    user: "demo"
+    user: SYSTEM_USER
 }
 export class Tty {
-    constructor(startPosition = "/", user = "demo", envOverride = null) {
+    constructor(startPosition = "/", user = SYSTEM_USER, envOverride = null) {
         this.user = user;
         this.env = envOverride || { ...data.env };
         this.env.LOGNAME = this.user;
@@ -51,7 +52,7 @@ export class Tty {
         return runCommand(command, hook, this);
     }
 };
-export let mainTty = new Tty("/", "demo", data.env);
+export let mainTty = new Tty("/", SYSTEM_USER, data.env);
 
 export function parseCommand(command) {
     //parse arguments and operators

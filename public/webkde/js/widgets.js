@@ -2,6 +2,7 @@
 import WidgetWindow from "./widgetWindow.js";
 import parseDesktopFile from "./parseDesktopFile.js";
 import DesktopMenu from "./menu.js";
+import { SYSTEM_HOME, SYSTEM_USER } from "./systemConfig.js";
 class Widget {
     constructor(icon, panel, config) {
         this.config = config;
@@ -88,10 +89,10 @@ class StarterApp {
                 text: "Unpin",
                 icon: "/usr/share/icons/breeze-dark/actions/window-unpin.svg",
                 action:()=>{
-                    let config = JSON.parse(debug.fileapi.internal.read("/home/demo/.config/plasma.json"));
+                    let config = JSON.parse(debug.fileapi.internal.read(`${SYSTEM_HOME}/.config/plasma.json`));
                     let widgetConfig = config.desktop.panels[this.panelIndex].items.find(widget => widget.type == "AppsWidget");
                     widgetConfig.config.apps.splice(widgetConfig.config.apps.indexOf(this.appLocation));
-                    debug.fileapi.internal.write("demo", "/home/demo/.config/plasma.json", JSON.stringify(config));
+                    debug.fileapi.internal.write(SYSTEM_USER, `${SYSTEM_HOME}/.config/plasma.json`, JSON.stringify(config));
                     this.remove();
                 }
             }])

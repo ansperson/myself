@@ -1,7 +1,8 @@
 import OSApi from "{{file:/usr/lib/api/api.js}}";
 
 const api = new OSApi();
-const defaultFile = "/home/demo/Documents/linkedin.html";
+let systemHome = "/home/demo";
+let defaultFile = `${systemHome}/Documents/linkedin.html`;
 const linkedInUrl = "https://www.linkedin.com/in/ansperson/";
 
 const address = document.getElementById("address");
@@ -98,7 +99,7 @@ async function loadFile(filePath) {
 }
 
 async function openFile() {
-    const location = await api.fileDialog(["*.html", "*.htm"], "/home/demo/Documents");
+    const location = await api.fileDialog(["*.html", "*.htm"], `${systemHome}/Documents`);
     if (location) {
         loadFile(location);
     }
@@ -115,6 +116,8 @@ api.gotData.then(async () => {
         title: "Browser",
         icon: "/usr/share/icons/breeze-dark/apps/internet-web-browser.svg"
     });
+    systemHome = (await api.readEnv("HOME")).read();
+    defaultFile = `${systemHome}/Documents/linkedin.html`;
 
     await api.loadIcons();
     await loadBrowserIcons();

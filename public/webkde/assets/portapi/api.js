@@ -285,11 +285,19 @@ class ConfigInterface {
     constructor(name, fields) {
         this.name = name;
         this.fields = fields;
-        this.configLocation = "/home/demo/.config/apps/" + this.name + ".json";
+        this.configLocation = null;
         this.ready = this.fetchContents();
         setInterval(()=>this.update(), 500)
     }
+    async resolveConfigLocation() {
+        if (this.configLocation) {
+            return;
+        }
+        const home = (await api.readEnv("HOME")).read();
+        this.configLocation = `${home}/.config/apps/${this.name}.json`;
+    }
     async fetchContents() {
+        await this.resolveConfigLocation();
         let fileExists = (await api.filesystem("fileExists", this.configLocation)).read().content;
         let data;
         if (!fileExists) {
@@ -301,6 +309,9 @@ class ConfigInterface {
         this.data = JSON.parse(data);
     }
     update() {
+        if (!this.configLocation) {
+            return;
+        }
         let stringifiedData = JSON.stringify(this.data);
         if (this.lastData == stringifiedData) {
             return;

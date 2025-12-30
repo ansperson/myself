@@ -12,6 +12,16 @@
         <div id="apps">
         </div>
     </div>
+    <script src="/system.js"></script>
+    <script>
+        try {
+            if (!window.__SYSTEM_CONFIG__ && window.parent && window.parent.__SYSTEM_CONFIG__) {
+                window.__SYSTEM_CONFIG__ = window.parent.__SYSTEM_CONFIG__;
+            }
+        } catch (error) {
+            // Ignore cross-origin access issues.
+        }
+    </script>
     <script src="js/desktop.js" type="module"></script>
 </body>
 
