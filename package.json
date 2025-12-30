@@ -12,13 +12,13 @@
     "autoprefixer": "^10.4.16",
     "jsdom": "^24.0.0",
     "postcss": "^8.4.32",
-    "svelte": "^4.2.8",
+    "svelte": "^4.2.19",
     "svelte-check": "^3.6.2",
     "tailwindcss": "^3.4.0",
     "tslib": "^2.6.2",
     "typescript": "^5.2.2",
-    "vite": "^5.0.12",
-    "vitest": "^1.3.1"
+    "vite": "^5.4.20",
+    "vitest": "^1.6.1"
   },
   "engines": {
     "node": ">=18.17.0"
@@ -33,6 +33,16 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/ansperson/myself"
+  },
+  "resolutions": {
+    "cross-spawn": "^7.0.5",
+    "esbuild": "^0.25.0",
+    "form-data": "^4.0.4",
+    "glob": "^10.5.0",
+    "micromatch": "^4.0.8",
+    "nanoid": "^3.3.8",
+    "rollup": "^4.22.4",
+    "ws": "^8.17.1"
   },
   "scripts": {
     "build": "vite build",
