@@ -1,61 +1,29 @@
+# Needs permission to push changes to main
+
 name: cd-tag-release
 
+# Trigger on any push to main (including merges)
 on:
   push:
     branches:
       - main
 
+# Allow this workflow to push tags back to the repo
 permissions:
   contents: write
-  pull-requests: write
 
 jobs:
-  bump-pr:
+  bump-and-tag:
+    # Skip running on the automated bump commit itself
     if: "!startsWith(github.event.head_commit.message, 'bump:')"
     runs-on: ubuntu-latest
     steps:
       - name: Check out the full history
-        uses: actions/checkout@v6.0.1
+        uses: actions/checkout@v4
         with:
-          fetch-depth: 0
-      - name: Set up Python
-        uses: actions/setup-python@v5
+          fetch-depth: 0            # so Commitizen can see the latest tag
+
+      - name: Bump version & create tag
+        uses: commitizen-tools/commitizen-action@master
         with:
-          python-version: "3.11"
-      - name: Install commitizen
-        run: pip install commitizen
-      - name: Bump version files only
-        id: bump
-        shell: bash
-        run: |
-          set -euo pipefail
-          old_version="$(python - <<'PY'
-          import tomllib
-          with open('.cz.toml', 'rb') as f:
-              data = tomllib.load(f)
-          print(data['tool']['commitizen']['version'])
-          PY
-          )"
-          cz bump --yes --changelog --files-only --no-raise
-          new_version="$(python - <<'PY'
-          import tomllib
-          with open('.cz.toml', 'rb') as f:
-              data = tomllib.load(f)
-          print(data['tool']['commitizen']['version'])
-          PY
-          )"
-          if [ "$old_version" = "$new_version" ]; then
-            echo "no_changes=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "old_version=$old_version" >> "$GITHUB_OUTPUT"
-            echo "new_version=$new_version" >> "$GITHUB_OUTPUT"
-          fi
-      - name: Create bump PR
-        if: steps.bump.outputs.no_changes != 'true'
-        uses: peter-evans/create-pull-request@v6
-        with:
-          branch: "chore/bump-${{ steps.bump.outputs.new_version }}"
-          title: "bump: version ${{ steps.bump.outputs.old_version }} -> ${{ steps.bump.outputs.new_version }}"
-          commit-message: "bump: version ${{ steps.bump.outputs.old_version }} -> ${{ steps.bump.outputs.new_version }}"
-          body: "Automated version bump via Commitizen."
-          labels: "release"
+          github_token: ${{ secrets.GITHUB_TOKEN }}
